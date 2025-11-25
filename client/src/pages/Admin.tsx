@@ -144,6 +144,23 @@ export default function AdminPage() {
     setImageUrls(imageUrls.filter((_, i) => i !== index));
   };
 
+  const createProductMutation = useMutation({
+    mutationFn: async (data: ProductFormData & { images: string[] }) => {
+      return apiRequest("POST", "/api/products", data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/products"] });
+      toast({ title: "Product created successfully" });
+      reset();
+      setShowProductDialog(false);
+      setEditingProduct(null);
+      setImageUrls([]);
+    },
+    onError: () => {
+      toast({ title: "Failed to create product", variant: "destructive" });
+    },
+  });
+
   const onSubmit = (data: ProductFormData) => {
     if (imageUrls.length === 0) {
       toast({
@@ -152,11 +169,7 @@ export default function AdminPage() {
       });
       return;
     }
-    toast({ title: editingProduct ? "Product updated" : "Product created" });
-    reset();
-    setShowProductDialog(false);
-    setEditingProduct(null);
-    setImageUrls([]);
+    createProductMutation.mutate({ ...data, images: imageUrls });
   };
 
   if (!isLoggedIn) {

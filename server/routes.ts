@@ -49,6 +49,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post("/api/products", async (req, res) => {
+    try {
+      const product = await storage.createProduct(req.body);
+      res.json(product);
+    } catch (error) {
+      res.status(400).json({ error: "Failed to create product" });
+    }
+  });
+
   // Reviews
   app.get("/api/reviews/:productId", async (req, res) => {
     try {
