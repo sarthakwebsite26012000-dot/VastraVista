@@ -13,6 +13,7 @@ import ProductDetail from "@/pages/ProductDetail";
 import Checkout from "@/pages/Checkout";
 import OrderTracking from "@/pages/OrderTracking";
 import AdminPage from "@/pages/Admin";
+import AdminSettings from "@/pages/AdminSettings";
 import NotFound from "@/pages/not-found";
 
 function Router({ onCartClick }: { onCartClick: () => void }) {
@@ -39,7 +40,12 @@ function Router({ onCartClick }: { onCartClick: () => void }) {
         <Route path="/product/:id" component={ProductDetail} />
         <Route path="/checkout" component={Checkout} />
         <Route path="/order/:id" component={OrderTracking} />
+        <Route path="/products/search" component={ProductListing} />
+        <Route path="/products/bags/:category">
+          {({ category }) => <ProductListing category={`bags-${category}`} />}
+        </Route>
         <Route path="/admin" component={AdminPage} />
+        <Route path="/admin/settings" component={AdminSettings} />
         <Route component={NotFound} />
       </Switch>
       <Footer />

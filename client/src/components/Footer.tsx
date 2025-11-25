@@ -2,8 +2,11 @@ import { Link } from "wouter";
 import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { getStoreSettings } from "@/lib/storeSettings";
 
 export function Footer() {
+  const settings = getStoreSettings();
+
   return (
     <footer className="bg-card border-t mt-16">
       <div className="max-w-7xl mx-auto px-6 py-12">
@@ -11,21 +14,33 @@ export function Footer() {
           {/* Brand */}
           <div className="space-y-4">
             <h3 className="text-2xl font-serif font-bold text-primary">
-              Elegant Ethnic
+              {settings.storeName}
             </h3>
             <p className="text-sm text-muted-foreground">
               Your destination for premium traditional Indian wear. Exquisite sarees, elegant suits, and designer ethnic collections.
             </p>
             <div className="flex gap-2">
-              <Button variant="ghost" size="icon" data-testid="button-facebook">
-                <Facebook className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" data-testid="button-instagram">
-                <Instagram className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" data-testid="button-twitter">
-                <Twitter className="h-4 w-4" />
-              </Button>
+              {settings.facebookUrl && (
+                <Link href={settings.facebookUrl}>
+                  <Button variant="ghost" size="icon" data-testid="button-facebook">
+                    <Facebook className="h-4 w-4" />
+                  </Button>
+                </Link>
+              )}
+              {settings.instagramUrl && (
+                <Link href={settings.instagramUrl}>
+                  <Button variant="ghost" size="icon" data-testid="button-instagram">
+                    <Instagram className="h-4 w-4" />
+                  </Button>
+                </Link>
+              )}
+              {settings.twitterUrl && (
+                <Link href={settings.twitterUrl}>
+                  <Button variant="ghost" size="icon" data-testid="button-twitter">
+                    <Twitter className="h-4 w-4" />
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
 
@@ -62,15 +77,15 @@ export function Footer() {
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li className="flex items-center gap-2">
                 <Phone className="h-4 w-4" />
-                <span>+91 98765 43210</span>
+                <span>{settings.storePhone}</span>
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4" />
-                <span>support@elegantethnic.com</span>
+                <span>{settings.storeEmail}</span>
               </li>
               <li className="flex items-center gap-2">
                 <MapPin className="h-4 w-4" />
-                <span>Mumbai, Maharashtra, India</span>
+                <span>{settings.city}, {settings.state}, India</span>
               </li>
             </ul>
             <ul className="space-y-2 text-sm">

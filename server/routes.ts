@@ -7,11 +7,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Products
   app.get("/api/products", async (req, res) => {
     try {
-      const { category, sortBy, priceRange, sizes, colors, fabrics } = req.query;
+      const { category, sortBy, priceRange, sizes, colors, fabrics, search } = req.query;
       
       const filters: any = { sortBy: sortBy as string };
       
-      if (category) filters.category = category as string;
+      if (category && category !== "bags-") filters.category = category as string;
       if (priceRange) {
         const [min, max] = (priceRange as string).split(",").map(Number);
         filters.priceRange = [min, max];
@@ -19,6 +19,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (sizes) filters.sizes = (sizes as string).split(",");
       if (colors) filters.colors = (colors as string).split(",");
       if (fabrics) filters.fabrics = (fabrics as string).split(",");
+      if (search) filters.search = search as string;
 
       const products = await storage.getProducts(filters);
       res.json(products);

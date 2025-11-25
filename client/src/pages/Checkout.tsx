@@ -12,9 +12,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
-import { Check } from "lucide-react";
+import { Check, Smartphone, CreditCard, Building2, Truck } from "lucide-react";
+import { getStoreSettings } from "@/lib/storeSettings";
 
 const checkoutSchema = z.object({
+  paymentMethod: z.enum(["upi", "card", "netbanking", "cod"]),
   customerName: z.string().min(1, "Name is required"),
   customerEmail: z.string().email("Invalid email address"),
   customerPhone: z.string().min(10, "Phone number must be at least 10 digits"),
@@ -31,7 +33,9 @@ const steps = ["Shipping", "Payment", "Review"];
 export default function Checkout() {
   const [currentStep, setCurrentStep] = useState(0);
   const [, setLocation] = useLocation();
+  const [paymentMethod, setPaymentMethod] = useState("cod");
   const { toast } = useToast();
+  const settings = getStoreSettings();
 
   const { data: cartItems = [], isLoading } = useQuery<CartItemWithProduct[]>({
     queryKey: ["/api/cart/items"],
@@ -289,14 +293,115 @@ export default function Checkout() {
                     <h2 className="text-2xl font-serif font-bold">
                       Payment Method
                     </h2>
-                    <p className="text-muted-foreground">
-                      Payment will be processed securely using Stripe. You'll be
-                      redirected to complete your payment after reviewing your
-                      order.
+                    <p className="text-muted-foreground mb-6">
+                      Select your preferred payment method
                     </p>
+
+                    <div className="space-y-3">
+                      {/* UPI Option */}
+                      {settings.paymentMethods.upi && (
+                        <Card 
+                          className={`p-4 cursor-pointer transition-all ${paymentMethod === "upi" ? "ring-2 ring-primary" : ""}`}
+                          onClick={() => setPaymentMethod("upi")}
+                          data-testid="card-payment-upi"
+                        >
+                          <div className="flex items-center gap-4">
+                            <input
+                              type="radio"
+                              name="payment"
+                              value="upi"
+                              checked={paymentMethod === "upi"}
+                              onChange={(e) => setPaymentMethod(e.target.value)}
+                              data-testid="radio-upi"
+                            />
+                            <Smartphone className="h-5 w-5 text-primary" />
+                            <div>
+                              <p className="font-semibold">UPI Payment</p>
+                              <p className="text-sm text-muted-foreground">GPay, PhonePe, Paytm</p>
+                            </div>
+                          </div>
+                        </Card>
+                      )}
+
+                      {/* Card Option */}
+                      {settings.paymentMethods.card && (
+                        <Card 
+                          className={`p-4 cursor-pointer transition-all ${paymentMethod === "card" ? "ring-2 ring-primary" : ""}`}
+                          onClick={() => setPaymentMethod("card")}
+                          data-testid="card-payment-card"
+                        >
+                          <div className="flex items-center gap-4">
+                            <input
+                              type="radio"
+                              name="payment"
+                              value="card"
+                              checked={paymentMethod === "card"}
+                              onChange={(e) => setPaymentMethod(e.target.value)}
+                              data-testid="radio-card"
+                            />
+                            <CreditCard className="h-5 w-5 text-primary" />
+                            <div>
+                              <p className="font-semibold">Credit/Debit Card</p>
+                              <p className="text-sm text-muted-foreground">Visa, Mastercard, Amex</p>
+                            </div>
+                          </div>
+                        </Card>
+                      )}
+
+                      {/* Net Banking Option */}
+                      {settings.paymentMethods.netBanking && (
+                        <Card 
+                          className={`p-4 cursor-pointer transition-all ${paymentMethod === "netbanking" ? "ring-2 ring-primary" : ""}`}
+                          onClick={() => setPaymentMethod("netbanking")}
+                          data-testid="card-payment-netbanking"
+                        >
+                          <div className="flex items-center gap-4">
+                            <input
+                              type="radio"
+                              name="payment"
+                              value="netbanking"
+                              checked={paymentMethod === "netbanking"}
+                              onChange={(e) => setPaymentMethod(e.target.value)}
+                              data-testid="radio-netbanking"
+                            />
+                            <Building2 className="h-5 w-5 text-primary" />
+                            <div>
+                              <p className="font-semibold">Net Banking</p>
+                              <p className="text-sm text-muted-foreground">All major banks</p>
+                            </div>
+                          </div>
+                        </Card>
+                      )}
+
+                      {/* Cash on Delivery Option */}
+                      {settings.paymentMethods.cod && (
+                        <Card 
+                          className={`p-4 cursor-pointer transition-all ${paymentMethod === "cod" ? "ring-2 ring-primary" : ""}`}
+                          onClick={() => setPaymentMethod("cod")}
+                          data-testid="card-payment-cod"
+                        >
+                          <div className="flex items-center gap-4">
+                            <input
+                              type="radio"
+                              name="payment"
+                              value="cod"
+                              checked={paymentMethod === "cod"}
+                              onChange={(e) => setPaymentMethod(e.target.value)}
+                              data-testid="radio-cod"
+                            />
+                            <Truck className="h-5 w-5 text-primary" />
+                            <div>
+                              <p className="font-semibold">Cash on Delivery</p>
+                              <p className="text-sm text-muted-foreground">Pay when you receive</p>
+                            </div>
+                          </div>
+                        </Card>
+                      )}
+                    </div>
+
                     <div className="bg-muted p-4 rounded-md">
                       <p className="text-sm text-muted-foreground">
-                        🔒 Your payment information is secure and encrypted
+                        ✓ Your payment information is secure and encrypted
                       </p>
                     </div>
                   </div>

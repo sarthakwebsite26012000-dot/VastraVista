@@ -1,4 +1,5 @@
-import { ShoppingCart, Search, User, Menu, Heart, ChevronDown, Shirt, ShoppingBag, Users, Zap } from "lucide-react";
+import { ShoppingCart, Search, User, Menu, Heart, ChevronDown, Shirt, ShoppingBag, Users, Zap, Briefcase } from "lucide-react";
+import { useState as useStateHook } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -50,6 +51,18 @@ const mainCategories: MenuCategory[] = [
       { label: "Girls Dresses", path: "/products/kids/girls/dresses" },
       { label: "Girls Ethnicwear", path: "/products/kids/girls/ethnicwear" },
       { label: "Girls Topwear", path: "/products/kids/girls/topwear" },
+    ],
+  },
+  {
+    name: "Bags",
+    icon: <Briefcase className="h-5 w-5" />,
+    subcategories: [
+      { label: "Handbags", path: "/products/bags/handbags" },
+      { label: "Clutches", path: "/products/bags/clutches" },
+      { label: "Totes", path: "/products/bags/totes" },
+      { label: "Sling Bags", path: "/products/bags/sling" },
+      { label: "Potli Bags", path: "/products/bags/potli" },
+      { label: "Backpacks", path: "/products/bags/backpacks" },
     ],
   },
 ];
@@ -144,6 +157,12 @@ export function Header({ onCartClick }: HeaderProps) {
                 placeholder="Search for sarees, suits..."
                 className="w-64 pl-9"
                 data-testid="input-search"
+                onChange={(e) => {
+                  const query = e.target.value;
+                  if (query) {
+                    window.location.href = `/products/search?q=${encodeURIComponent(query)}`;
+                  }
+                }}
               />
             </div>
 

@@ -215,17 +215,26 @@ export default function AdminPage() {
             <h1 className="text-2xl font-serif font-bold">Admin Dashboard</h1>
             <p className="text-sm text-muted-foreground">Elegant Ethnic Management</p>
           </div>
-          <Button
-            variant="outline"
-            onClick={() => {
-              setIsLoggedIn(false);
-              setPassword("");
-            }}
-            data-testid="button-admin-logout"
-          >
-            <LogOut className="h-4 w-4 mr-2" />
-            Logout
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              onClick={() => window.location.href = "/admin/settings"}
+              data-testid="button-admin-settings"
+            >
+              Settings
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsLoggedIn(false);
+                setPassword("");
+              }}
+              data-testid="button-admin-logout"
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
+            </Button>
+          </div>
         </div>
       </div>
 

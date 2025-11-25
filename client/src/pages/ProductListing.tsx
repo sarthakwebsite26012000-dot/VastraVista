@@ -15,17 +15,24 @@ import {
 import { SlidersHorizontal } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
+import { useLocation } from "wouter";
+
 interface ProductListingProps {
   category?: string;
 }
 
 export default function ProductListing({ category }: ProductListingProps) {
+  const [, location] = useLocation();
+  const searchParams = new URLSearchParams(location.split("?")[1]);
+  const searchQuery = searchParams.get("q") || "";
+
   const [filters, setFilters] = useState({
-    category,
+    category: category || "",
     priceRange: [0, 50000] as [number, number],
     sizes: [] as string[],
     colors: [] as string[],
     fabrics: [] as string[],
+    search: searchQuery,
   });
   const [sortBy, setSortBy] = useState("featured");
 
