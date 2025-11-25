@@ -40,7 +40,18 @@ function Router({ onCartClick }: { onCartClick: () => void }) {
         <Route path="/product/:id" component={ProductDetail} />
         <Route path="/checkout" component={Checkout} />
         <Route path="/order/:id" component={OrderTracking} />
-        <Route path="/products/search" component={ProductListing} />
+        <Route path="/products/search">
+          {() => <ProductListing />}
+        </Route>
+        <Route path="/products/mens/:category">
+          {({ category }) => <ProductListing category={`mens-${category}`} />}
+        </Route>
+        <Route path="/products/women/:category">
+          {({ category }) => <ProductListing category={`women-${category}`} />}
+        </Route>
+        <Route path="/products/kids/:category">
+          {({ category }) => <ProductListing category={`kids-${category}`} />}
+        </Route>
         <Route path="/products/bags/:category">
           {({ category }) => <ProductListing category={`bags-${category}`} />}
         </Route>
