@@ -159,9 +159,17 @@ export default function ProductDetail() {
           {/* Product Info */}
           <div className="space-y-6">
             <div>
-              <h1 className="text-3xl md:text-4xl font-serif font-bold mb-2" data-testid="text-product-name">
-                {product.name}
-              </h1>
+              <div className="flex items-start justify-between mb-2">
+                <h1 className="text-3xl md:text-4xl font-serif font-bold" data-testid="text-product-name">
+                  {product.name}
+                </h1>
+                <Badge
+                  variant={product.inStock ? "default" : "destructive"}
+                  data-testid="badge-stock-status"
+                >
+                  {product.inStock ? "In Stock" : "Out of Stock"}
+                </Badge>
+              </div>
               <div className="flex items-center gap-2 mb-4">
                 <div className="flex gap-1">
                   {[1, 2, 3, 4, 5].map((star) => (

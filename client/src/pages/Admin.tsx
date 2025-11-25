@@ -10,9 +10,10 @@ import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LogOut, Plus, Edit, Trash2, Eye, Package, ShoppingCart, TrendingUp } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { LogOut, Plus, Edit, Trash2, Eye, Package, ShoppingCart, TrendingUp, X } from "lucide-react";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -29,7 +30,8 @@ const productFormSchema = z.object({
   fabric: z.string().min(1, "Fabric is required"),
   featured: z.boolean().optional(),
   newArrival: z.boolean().optional(),
-  inStock: z.boolean().optional(),
+  inStock: z.boolean().default(true),
+  images: z.array(z.string()).min(1, "At least one image is required"),
 });
 
 type ProductFormData = z.infer<typeof productFormSchema>;
@@ -40,6 +42,8 @@ export default function AdminPage() {
   const [activeTab, setActiveTab] = useState("products");
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [showProductDialog, setShowProductDialog] = useState(false);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [imageInput, setImageInput] = useState("");
   const { toast } = useToast();
 
   const mockOrders: Order[] = [
@@ -97,11 +101,15 @@ export default function AdminPage() {
     register,
     handleSubmit,
     reset,
+    control,
+    watch,
     formState: { errors },
   } = useForm<ProductFormData>({
     resolver: zodResolver(productFormSchema),
-    defaultValues: editingProduct || {},
+    defaultValues: editingProduct || { inStock: true, images: [] },
   });
+
+  const inStockValue = watch("inStock");
 
   const deleteProductMutation = useMutation({
     mutationFn: async (productId: string) => {
@@ -113,11 +121,42 @@ export default function AdminPage() {
     },
   });
 
+  const handleAddImage = () => {
+    if (!imageInput.trim()) {
+      toast({
+        title: "Image URL required",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (imageUrls.length >= 5) {
+      toast({
+        title: "Maximum 5 images allowed",
+        variant: "destructive",
+      });
+      return;
+    }
+    setImageUrls([...imageUrls, imageInput]);
+    setImageInput("");
+  };
+
+  const handleRemoveImage = (index: number) => {
+    setImageUrls(imageUrls.filter((_, i) => i !== index));
+  };
+
   const onSubmit = (data: ProductFormData) => {
+    if (imageUrls.length === 0) {
+      toast({
+        title: "At least one image is required",
+        variant: "destructive",
+      });
+      return;
+    }
     toast({ title: editingProduct ? "Product updated" : "Product created" });
     reset();
     setShowProductDialog(false);
     setEditingProduct(null);
+    setImageUrls([]);
   };
 
   if (!isLoggedIn) {
@@ -241,6 +280,7 @@ export default function AdminPage() {
                     onClick={() => {
                       setEditingProduct(null);
                       reset();
+                      setImageUrls([]);
                     }}
                     data-testid="button-add-product"
                   >
@@ -248,7 +288,7 @@ export default function AdminPage() {
                     Add Product
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
                   <DialogHeader>
                     <DialogTitle>
                       {editingProduct ? "Edit Product" : "Add New Product"}
@@ -339,6 +379,81 @@ export default function AdminPage() {
                       )}
                     </div>
 
+                    {/* Stock Management */}
+                    <div className="flex items-center justify-between p-3 bg-card border rounded-md">
+                      <Label className="text-sm font-medium">Stock Status</Label>
+                      <Controller
+                        name="inStock"
+                        control={control}
+                        render={({ field }) => (
+                          <Switch
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            data-testid="switch-in-stock"
+                          />
+                        )}
+                      />
+                    </div>
+
+                    {/* Product Images */}
+                    <div>
+                      <Label className="text-base font-semibold mb-2 block">
+                        Product Images (up to 5) *
+                      </Label>
+                      <div className="space-y-3">
+                        <div className="flex gap-2">
+                          <Input
+                            value={imageInput}
+                            onChange={(e) => setImageInput(e.target.value)}
+                            placeholder="Paste Unsplash image URL (e.g., https://images.unsplash.com/...)"
+                            data-testid="input-image-url"
+                          />
+                          <Button
+                            type="button"
+                            onClick={handleAddImage}
+                            variant="outline"
+                            data-testid="button-add-image"
+                          >
+                            Add
+                          </Button>
+                        </div>
+                        {errors.images && (
+                          <p className="text-sm text-destructive">
+                            {errors.images.message}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Image Previews */}
+                      {imageUrls.length > 0 && (
+                        <div className="grid grid-cols-3 gap-3 mt-4">
+                          {imageUrls.map((url, index) => (
+                            <div
+                              key={index}
+                              className="relative group aspect-square rounded-md overflow-hidden bg-muted border"
+                            >
+                              <img
+                                src={url}
+                                alt={`Product ${index + 1}`}
+                                className="w-full h-full object-cover"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveImage(index)}
+                                className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity bg-destructive text-destructive-foreground rounded-full p-1"
+                                data-testid={`button-remove-image-${index}`}
+                              >
+                                <X className="h-4 w-4" />
+                              </button>
+                              <span className="absolute bottom-1 left-1 bg-black/50 text-white text-xs px-2 py-1 rounded">
+                                {index + 1}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
                     <div className="flex gap-4">
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input
@@ -356,15 +471,6 @@ export default function AdminPage() {
                         />
                         <span className="text-sm">New Arrival</span>
                       </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          {...register("inStock")}
-                          defaultChecked
-                          data-testid="checkbox-in-stock"
-                        />
-                        <span className="text-sm">In Stock</span>
-                      </label>
                     </div>
 
                     <div className="flex gap-2 pt-4">
@@ -374,6 +480,7 @@ export default function AdminPage() {
                         onClick={() => {
                           setShowProductDialog(false);
                           setEditingProduct(null);
+                          setImageUrls([]);
                         }}
                       >
                         Cancel

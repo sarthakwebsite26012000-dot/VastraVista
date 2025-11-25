@@ -1,4 +1,4 @@
-import { ShoppingCart, Search, User, Menu, Heart } from "lucide-react";
+import { ShoppingCart, Search, User, Menu, Heart, ChevronDown, Shirt, Package, Baby, Dress, Shoe, Watch, Zap } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,11 +7,51 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import type { CartItem } from "@shared/schema";
 
-const categories = [
-  { name: "Sarees", path: "/products/sarees" },
-  { name: "Salwar Suits", path: "/products/salwar-suits" },
-  { name: "Kurtis", path: "/products/kurtis" },
-  { name: "Lehengas", path: "/products/lehengas" },
+interface MenuCategory {
+  name: string;
+  icon: React.ReactNode;
+  subcategories: { label: string; path: string }[];
+}
+
+const mainCategories: MenuCategory[] = [
+  {
+    name: "Men",
+    icon: <Shirt className="h-5 w-5" />,
+    subcategories: [
+      { label: "Topwear", path: "/products/mens/topwear" },
+      { label: "Bottomwear", path: "/products/mens/bottomwear" },
+      { label: "Ethnicwear", path: "/products/mens/ethnicwear" },
+      { label: "Footwear", path: "/products/mens/footwear" },
+      { label: "Accessories", path: "/products/mens/accessories" },
+    ],
+  },
+  {
+    name: "Women",
+    icon: <Dress className="h-5 w-5" />,
+    subcategories: [
+      { label: "Sarees", path: "/products/sarees" },
+      { label: "Salwar Suits", path: "/products/salwar-suits" },
+      { label: "Kurtis", path: "/products/kurtis" },
+      { label: "Lehengas", path: "/products/lehengas" },
+      { label: "Topwear", path: "/products/women/topwear" },
+      { label: "Bottomwear", path: "/products/women/bottomwear" },
+      { label: "Dresses", path: "/products/women/dresses" },
+      { label: "Footwear", path: "/products/women/footwear" },
+      { label: "Accessories", path: "/products/women/accessories" },
+    ],
+  },
+  {
+    name: "Kids",
+    icon: <Baby className="h-5 w-5" />,
+    subcategories: [
+      { label: "Boys Topwear", path: "/products/kids/boys/topwear" },
+      { label: "Boys Bottomwear", path: "/products/kids/boys/bottomwear" },
+      { label: "Boys Ethnicwear", path: "/products/kids/boys/ethnicwear" },
+      { label: "Girls Dresses", path: "/products/kids/girls/dresses" },
+      { label: "Girls Ethnicwear", path: "/products/kids/girls/ethnicwear" },
+      { label: "Girls Topwear", path: "/products/kids/girls/topwear" },
+    ],
+  },
 ];
 
 interface HeaderProps {
@@ -21,6 +61,7 @@ interface HeaderProps {
 export function Header({ onCartClick }: HeaderProps) {
   const [location] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   const { data: cartItems = [] } = useQuery<CartItem[]>({
     queryKey: ["/api/cart"],
@@ -54,17 +95,42 @@ export function Header({ onCartClick }: HeaderProps) {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-1">
-            {categories.map((category) => (
-              <Link key={category.path} href={category.path}>
+          <nav className="hidden lg:flex items-center gap-0">
+            {mainCategories.map((category) => (
+              <div
+                key={category.name}
+                className="relative group"
+                onMouseEnter={() => setActiveDropdown(category.name)}
+                onMouseLeave={() => setActiveDropdown(null)}
+              >
                 <Button
-                  variant={location === category.path ? "secondary" : "ghost"}
-                  className="font-medium"
-                  data-testid={`link-category-${category.name.toLowerCase().replace(/\s+/g, "-")}`}
+                  variant="ghost"
+                  className="font-medium gap-1"
+                  data-testid={`button-category-${category.name.toLowerCase()}`}
                 >
+                  {category.icon}
                   {category.name}
+                  <ChevronDown className="h-4 w-4 transition-transform group-hover:rotate-180" />
                 </Button>
-              </Link>
+
+                {/* Mega Dropdown Menu */}
+                <div className="absolute left-0 top-full hidden group-hover:block bg-card border-t border shadow-lg z-50 w-72">
+                  <div className="p-4 space-y-2">
+                    {category.subcategories.map((sub) => (
+                      <Link key={sub.path} href={sub.path}>
+                        <Button
+                          variant="ghost"
+                          className="w-full justify-start text-sm"
+                          data-testid={`link-subcategory-${sub.label.toLowerCase().replace(/\s+/g, "-")}`}
+                        >
+                          <Zap className="h-3 w-3 mr-2" />
+                          {sub.label}
+                        </Button>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
             ))}
           </nav>
 
@@ -116,18 +182,32 @@ export function Header({ onCartClick }: HeaderProps) {
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <nav className="lg:hidden py-4 space-y-2 border-t">
-            {categories.map((category) => (
-              <Link key={category.path} href={category.path}>
+          <nav className="lg:hidden py-4 space-y-2 border-t max-h-96 overflow-y-auto">
+            {mainCategories.map((category) => (
+              <div key={category.name}>
                 <Button
-                  variant={location === category.path ? "secondary" : "ghost"}
-                  className="w-full justify-start"
-                  onClick={() => setMobileMenuOpen(false)}
-                  data-testid={`link-category-mobile-${category.name.toLowerCase().replace(/\s+/g, "-")}`}
+                  variant="ghost"
+                  className="w-full justify-start font-semibold gap-2"
+                  data-testid={`button-category-mobile-${category.name.toLowerCase()}`}
                 >
+                  {category.icon}
                   {category.name}
                 </Button>
-              </Link>
+                <div className="pl-6 space-y-1">
+                  {category.subcategories.map((sub) => (
+                    <Link key={sub.path} href={sub.path}>
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start text-sm"
+                        onClick={() => setMobileMenuOpen(false)}
+                        data-testid={`link-subcategory-mobile-${sub.label.toLowerCase().replace(/\s+/g, "-")}`}
+                      >
+                        {sub.label}
+                      </Button>
+                    </Link>
+                  ))}
+                </div>
+              </div>
             ))}
           </nav>
         )}

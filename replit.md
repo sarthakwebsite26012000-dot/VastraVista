@@ -39,10 +39,20 @@ Preferred communication style: Simple, everyday language.
 **Key Pages & Features**
 - Home: Hero carousel, category cards, featured products, testimonials
 - Product Listing: Filterable product grids with sorting (category, price, size, color, fabric)
-- Product Detail: Image gallery, size/color selection, reviews, add to cart
+- Product Detail: Multi-image gallery with thumbnails, size/color selection, stock status badge, reviews, add to cart
 - Cart: Shopping cart drawer with quantity management and free shipping progress
 - Checkout: Multi-step form (shipping, payment, review)
 - Order Tracking: Status visualization with delivery timeline
+- Admin Dashboard: Product/order management with password protection
+
+**Navigation System**
+- Mega dropdown menus in header for Men, Women, Kids categories with subcategories
+- Creative Lucide React icons for each category (Shirt for topwear, Dress for womenswear, Baby for kids)
+- Responsive mobile navigation with collapsible category menus
+- Subcategory structure:
+  - **MEN**: Topwear, Bottomwear, Ethnicwear, Footwear, Accessories
+  - **WOMEN**: Sarees, Salwar Suits, Kurtis, Lehengas, Topwear, Bottomwear, Dresses, Footwear, Accessories
+  - **KIDS**: Boys (Topwear, Bottomwear, Ethnicwear), Girls (Dresses, Ethnicwear, Topwear)
 
 ### Backend Architecture
 
@@ -81,7 +91,7 @@ Preferred communication style: Simple, everyday language.
 - PostgreSQL dialect configuration (via Neon serverless adapter)
 
 **Data Models**
-- **Products**: Core catalog with name, description, category, pricing, images array, variants (sizes/colors), fabric, stock status, featured/new flags, ratings
+- **Products**: Core catalog with name, description, category, pricing, images array (up to 5 URLs), variants (sizes/colors), fabric, stock status (inStock boolean), featured/new flags, ratings
 - **Reviews**: Customer feedback with rating (1-5), comment, timestamps
 - **Cart Items**: Session-based cart entries with product reference, quantity, size, color selections
 - **Orders**: Customer orders with contact info, shipping address, status tracking, timestamps
@@ -124,3 +134,79 @@ Preferred communication style: Simple, everyday language.
 - Replit-specific Vite plugins (cartographer, dev-banner, runtime-error-modal)
 - TypeScript for type checking across client/server/shared code
 - ESBuild for production server bundling
+
+## Recent Updates (Latest Session)
+
+### 1. Mega Category Navigation System
+**Implementation**:
+- Added Men, Women, Kids main categories with dropdown menus in Header.tsx
+- Each category has dedicated subcategories with paths for routing
+- Creative Lucide React icons: Shirt for Men, Dress for Women, Baby for Kids
+- Subcategories use Zap icon for visual consistency
+- Hover effects on desktop with animated chevron icon
+- Mobile-friendly accordion navigation with collapsible category menus
+
+**File Modified**: `client/src/components/Header.tsx`
+- Replaced simple category buttons with mega dropdown structure
+- Added MenuCategory interface for category/subcategory management
+- Desktop mega menus using CSS groups and hover states
+- Mobile navigation with nested button structure
+
+### 2. Admin Page - Multiple Image Upload
+**Implementation**:
+- Admin can upload up to 5 product images per product
+- Image URL input field with Add button for each image
+- Real-time image preview grid (3 columns)
+- Hover-to-remove X button for each image thumbnail
+- Image ordering with numbered badges
+- Validation: at least 1 image required for product creation
+- Toast notifications for validation feedback
+
+**File Modified**: `client/src/pages/Admin.tsx`
+- Added imageUrls state management for temporary image storage
+- Added handleAddImage and handleRemoveImage functions
+- Integrated Switch component for stock status toggle
+- Expanded dialog size for better image preview display
+- Updated form schema to include images array validation
+
+### 3. Admin Page - Stock Management
+**Implementation**:
+- Stock Status toggle using Radix UI Switch component
+- Visual switch labeled "In Stock" / "Out of Stock"
+- Styled as a card-like container with gray background
+- Integrated with form validation and state management
+- Stock status reflected in product table badges
+
+**File Modified**: `client/src/pages/Admin.tsx`
+- Added Switch import and Controller from react-hook-form
+- Stock toggle in dedicated panel for visibility
+- Product table shows "In Stock" or "Out" badges with appropriate colors
+
+### 4. Product Detail - Stock Status Badge
+**Implementation**:
+- Stock status badge displayed next to product name
+- Green badge for "In Stock", Red badge for "Out of Stock"
+- Positioned in top-right of product info section
+- Helps customers quickly identify product availability
+
+**File Modified**: `client/src/pages/ProductDetail.tsx`
+- Added stock status badge using Badge component
+- Dynamic badge variant based on inStock boolean
+- Proper alignment and spacing with product title
+
+### 5. Image Gallery Enhancements
+**Feature**: 
+- ProductDetail already has multi-image gallery with thumbnail selection
+- Supports all images from product.images array
+- Smooth image switching with border highlight on selected thumbnail
+- Responsive grid layout for thumbnails
+
+**Current Implementation**: `client/src/pages/ProductDetail.tsx`
+- Main image display (3:4 aspect ratio)
+- 4-column thumbnail grid that responds to selected image
+- Selected thumbnail shows primary color border
+
+## Admin Access
+- URL: `/admin`
+- Default Password: `sarthak@26012000`
+- Customizable via `VITE_ADMIN_PASSWORD` environment variable
