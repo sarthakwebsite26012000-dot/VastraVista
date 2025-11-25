@@ -1,4 +1,4 @@
-import { ShoppingCart, Search, User, Menu, Heart, ChevronDown, Shirt, Package, Baby, Dress, Shoe, Watch, Zap } from "lucide-react";
+import { ShoppingCart, Search, User, Menu, Heart, ChevronDown, Shirt, ShoppingBag, Users, Zap } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,7 +27,7 @@ const mainCategories: MenuCategory[] = [
   },
   {
     name: "Women",
-    icon: <Dress className="h-5 w-5" />,
+    icon: <ShoppingBag className="h-5 w-5" />,
     subcategories: [
       { label: "Sarees", path: "/products/sarees" },
       { label: "Salwar Suits", path: "/products/salwar-suits" },
@@ -42,7 +42,7 @@ const mainCategories: MenuCategory[] = [
   },
   {
     name: "Kids",
-    icon: <Baby className="h-5 w-5" />,
+    icon: <Users className="h-5 w-5" />,
     subcategories: [
       { label: "Boys Topwear", path: "/products/kids/boys/topwear" },
       { label: "Boys Bottomwear", path: "/products/kids/boys/bottomwear" },
