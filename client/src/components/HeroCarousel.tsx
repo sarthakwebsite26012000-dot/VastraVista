@@ -53,7 +53,7 @@ export function HeroCarousel() {
   };
 
   return (
-    <div className="relative h-[500px] md:h-[600px] overflow-hidden bg-muted">
+    <div className="relative h-[500px] md:h-[600px] overflow-hidden bg-foreground">
       {slides.map((slide, index) => (
         <div
           key={index}
@@ -66,27 +66,27 @@ export function HeroCarousel() {
             alt={slide.title}
             className="w-full h-full object-cover"
           />
-          {/* Dark gradient overlay for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent" />
+          {/* Dark overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40" />
           
           {/* Content */}
           <div className="absolute inset-0 flex items-center">
             <div className="max-w-7xl mx-auto px-6 w-full">
-              <div className="max-w-xl">
-                <h2 className="text-4xl md:text-6xl font-serif font-bold text-white mb-4">
+              <div className="max-w-2xl">
+                <h2 className="text-5xl md:text-7xl font-black uppercase text-white mb-6 tracking-tight">
                   {slide.title}
                 </h2>
-                <p className="text-xl md:text-2xl text-white/90 mb-8">
+                <p className="text-lg md:text-xl text-white/80 mb-8 uppercase font-semibold">
                   {slide.subtitle}
                 </p>
                 <Link href={slide.link}>
                   <Button
                     size="lg"
                     variant="outline"
-                    className="bg-white/10 backdrop-blur-sm text-white border-white/30 hover:bg-white/20 text-lg px-8"
+                    className="bg-white text-foreground border-white font-black uppercase px-8 hover:bg-white/90 text-lg"
                     data-testid={`button-hero-cta-${index}`}
                   >
-                    {slide.cta}
+                    {slide.cta} →
                   </Button>
                 </Link>
               </div>
