@@ -20,57 +20,57 @@ export function ProductCard({ product }: ProductCardProps) {
     : 0;
 
   return (
-    <Card className="group overflow-hidden bg-background border-0 hover-elevate active-elevate-2" data-testid={`card-product-${product.id}`}>
+    <Card className="group overflow-hidden hover-elevate active-elevate-2" data-testid={`card-product-${product.id}`}>
       <CardContent className="p-0">
         <Link href={`/product/${product.id}`}>
           <div className="relative aspect-[3/4] overflow-hidden bg-muted">
             <img
               src={product.images[0]}
               alt={product.name}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-102"
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
             {hasDiscount && (
-              <Badge className="absolute top-4 left-4 bg-foreground text-background font-black text-xs" data-testid={`badge-discount-${product.id}`}>
+              <Badge className="absolute top-2 left-2 bg-destructive text-destructive-foreground" data-testid={`badge-discount-${product.id}`}>
                 {discountPercent}% OFF
               </Badge>
             )}
             {product.newArrival && (
-              <Badge className="absolute top-4 right-4 bg-foreground text-background font-black text-xs" data-testid={`badge-new-${product.id}`}>
-                NEW
+              <Badge className="absolute top-2 right-2 bg-accent text-accent-foreground" data-testid={`badge-new-${product.id}`}>
+                New
               </Badge>
             )}
             <Button
               variant="ghost"
               size="icon"
-              className="absolute top-4 right-4 bg-background opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute top-2 right-2 bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity"
               data-testid={`button-wishlist-${product.id}`}
             >
               <Heart className="h-4 w-4" />
             </Button>
           </div>
         </Link>
-        <div className="p-4 space-y-3">
+        <div className="p-4 space-y-2">
           <Link href={`/product/${product.id}`}>
-            <h3 className="font-black text-sm uppercase line-clamp-2 group-hover:underline transition-all" data-testid={`text-product-name-${product.id}`}>
+            <h3 className="font-semibold text-lg line-clamp-2 hover:text-primary transition-colors" data-testid={`text-product-name-${product.id}`}>
               {product.name}
             </h3>
           </Link>
-          <p className="text-xs text-muted-foreground uppercase">{product.fabric}</p>
+          <p className="text-sm text-muted-foreground">{product.fabric}</p>
           <div className="flex items-center gap-1">
-            <Star className="h-3 w-3 fill-foreground text-foreground" />
-            <span className="text-xs font-bold" data-testid={`text-rating-${product.id}`}>
+            <Star className="h-4 w-4 fill-primary text-primary" />
+            <span className="text-sm font-medium" data-testid={`text-rating-${product.id}`}>
               {parseFloat(product.rating || "0").toFixed(1)}
             </span>
-            <span className="text-xs text-muted-foreground">
+            <span className="text-sm text-muted-foreground">
               ({product.reviewCount})
             </span>
           </div>
-          <div className="flex items-baseline gap-2 pt-2 border-t border-border">
-            <span className="text-xl font-black" data-testid={`text-price-${product.id}`}>
+          <div className="flex items-baseline gap-2">
+            <span className="text-2xl font-bold" data-testid={`text-price-${product.id}`}>
               ₹{parseFloat(product.price).toLocaleString("en-IN")}
             </span>
             {hasDiscount && (
-              <span className="text-xs text-muted-foreground line-through" data-testid={`text-original-price-${product.id}`}>
+              <span className="text-sm text-muted-foreground line-through" data-testid={`text-original-price-${product.id}`}>
                 ₹{parseFloat(product.originalPrice!).toLocaleString("en-IN")}
               </span>
             )}

@@ -90,7 +90,7 @@ export function Header({ onCartClick }: HeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-foreground text-background">
+    <header className="sticky top-0 z-50 bg-background border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Top bar */}
         <div className="flex items-center justify-between h-16">
@@ -98,7 +98,7 @@ export function Header({ onCartClick }: HeaderProps) {
           <Button
             variant="ghost"
             size="icon"
-            className="lg:hidden text-background hover:bg-primary/10"
+            className="lg:hidden"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             data-testid="button-mobile-menu"
           >
@@ -107,15 +107,15 @@ export function Header({ onCartClick }: HeaderProps) {
 
           {/* Logo */}
           <Link href="/" data-testid="link-home">
-            <div className="flex items-center cursor-pointer px-2 py-1">
-              <h1 className="text-xl font-black uppercase tracking-wider text-background">
-                VastraVista
+            <div className="flex items-center cursor-pointer hover-elevate active-elevate-2 px-2 py-1 rounded-md">
+              <h1 className="text-2xl font-serif font-bold text-primary">
+                Elegant Ethnic
               </h1>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-12">
+          <nav className="hidden lg:flex items-center gap-0">
             {mainCategories.map((category) => (
               <div
                 key={category.name}
@@ -125,23 +125,25 @@ export function Header({ onCartClick }: HeaderProps) {
               >
                 <Button
                   variant="ghost"
-                  className="font-black uppercase text-background hover:bg-primary/20 gap-1 px-0"
+                  className="font-medium gap-1"
                   data-testid={`button-category-${category.name.toLowerCase()}`}
                 >
+                  {category.icon}
                   {category.name}
-                  <ChevronDown className="h-3 w-3 transition-transform group-hover:rotate-180" />
+                  <ChevronDown className="h-4 w-4 transition-transform group-hover:rotate-180" />
                 </Button>
 
                 {/* Mega Dropdown Menu */}
-                <div className="absolute left-0 top-full hidden group-hover:block bg-foreground z-50 w-56">
+                <div className="absolute left-0 top-full hidden group-hover:block bg-card border-t border shadow-lg z-50 w-72">
                   <div className="p-4 space-y-2">
                     {category.subcategories.map((sub) => (
                       <Link key={sub.path} href={sub.path}>
                         <Button
                           variant="ghost"
-                          className="w-full justify-start text-sm text-background uppercase font-bold hover:bg-primary/20"
+                          className="w-full justify-start text-sm"
                           data-testid={`link-subcategory-${sub.label.toLowerCase().replace(/\s+/g, "-")}`}
                         >
+                          <Zap className="h-3 w-3 mr-2" />
                           {sub.label}
                         </Button>
                       </Link>
@@ -153,14 +155,14 @@ export function Header({ onCartClick }: HeaderProps) {
           </nav>
 
           {/* Search & Actions */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             {/* Search - Desktop */}
             <div className="hidden md:flex items-center relative">
-              <Search className="absolute left-3 h-4 w-4 text-background/50 pointer-events-none" />
+              <Search className="absolute left-3 h-4 w-4 text-muted-foreground pointer-events-none" />
               <Input
                 type="search"
-                placeholder="Search..."
-                className="w-48 pl-9 bg-background text-foreground border-0"
+                placeholder="Search for sarees, suits..."
+                className="w-64 pl-9"
                 data-testid="input-search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -169,31 +171,28 @@ export function Header({ onCartClick }: HeaderProps) {
             </div>
 
             {/* Search - Mobile */}
-            <Button variant="ghost" size="icon" className="md:hidden text-background hover:bg-primary/10" data-testid="button-search-mobile">
+            <Button variant="ghost" size="icon" className="md:hidden" data-testid="button-search-mobile">
               <Search className="h-5 w-5" />
             </Button>
 
-            <Button variant="ghost" size="icon" className="text-background hover:bg-primary/10" data-testid="button-wishlist">
+            <Button variant="ghost" size="icon" data-testid="button-wishlist">
               <Heart className="h-5 w-5" />
             </Button>
 
-            <Button variant="ghost" size="icon" className="text-background hover:bg-primary/10" data-testid="button-account">
+            <Button variant="ghost" size="icon" data-testid="button-account">
               <User className="h-5 w-5" />
             </Button>
 
             <Button
               variant="ghost"
               size="icon"
-              className="relative text-background hover:bg-primary/10"
-              onClick={onCartClick}
+              onClick={() => onCartClick()}
               data-testid="button-cart"
+              className="relative"
             >
               <ShoppingCart className="h-5 w-5" />
               {cartCount > 0 && (
-                <Badge
-                  className="absolute -top-1 -right-1 h-5 min-w-5 flex items-center justify-center p-0 px-1 text-xs bg-accent text-accent-foreground"
-                  data-testid="badge-cart-count"
-                >
+                <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs" data-testid="badge-cart-count">
                   {cartCount}
                 </Badge>
               )}
@@ -203,14 +202,15 @@ export function Header({ onCartClick }: HeaderProps) {
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <nav className="lg:hidden py-4 space-y-2 border-t border-background max-h-96 overflow-y-auto">
+          <nav className="lg:hidden py-4 space-y-2 border-t max-h-96 overflow-y-auto">
             {mainCategories.map((category) => (
               <div key={category.name}>
                 <Button
                   variant="ghost"
-                  className="w-full justify-start font-black uppercase text-background hover:bg-primary/20 gap-2"
+                  className="w-full justify-start font-semibold gap-2"
                   data-testid={`button-category-mobile-${category.name.toLowerCase()}`}
                 >
+                  {category.icon}
                   {category.name}
                 </Button>
                 <div className="pl-6 space-y-1">
@@ -218,7 +218,7 @@ export function Header({ onCartClick }: HeaderProps) {
                     <Link key={sub.path} href={sub.path}>
                       <Button
                         variant="ghost"
-                        className="w-full justify-start text-xs text-background uppercase hover:bg-primary/20"
+                        className="w-full justify-start text-sm"
                         onClick={() => setMobileMenuOpen(false)}
                         data-testid={`link-subcategory-mobile-${sub.label.toLowerCase().replace(/\s+/g, "-")}`}
                       >
