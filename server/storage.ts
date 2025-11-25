@@ -301,8 +301,8 @@ export class MemStorage implements IStorage {
         price: "8999",
         originalPrice: "12999",
         images: [
-          "https://images.unsplash.comgenerated_images/premium_saree_product_detail.png",
-          "https://images.unsplash.comgenerated_images/saree_category_product_photo.png",
+          "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&h=1000&fit=crop",
+          "https://images.unsplash.com/photo-1610030469527-e0b497050a4c?w=800&h=1000&fit=crop",
         ],
         sizes: ["Free Size"],
         colors: ["Navy Blue", "Gold"],
@@ -319,7 +319,7 @@ export class MemStorage implements IStorage {
         price: "6499",
         originalPrice: "9999",
         images: [
-          "https://images.unsplash.comgenerated_images/saree_category_product_photo.png",
+          "https://images.unsplash.com/photo-1583391733956-6c78276477e5?w=800&h=1000&fit=crop",
         ],
         sizes: ["Free Size"],
         colors: ["Coral Pink", "Gold"],
@@ -335,7 +335,7 @@ export class MemStorage implements IStorage {
         category: "Sarees",
         price: "7999",
         images: [
-          "https://images.unsplash.comgenerated_images/saree_category_product_photo.png",
+          "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=800&h=1000&fit=crop",
         ],
         sizes: ["Free Size"],
         colors: ["Green", "Silver"],
@@ -351,7 +351,7 @@ export class MemStorage implements IStorage {
         category: "Sarees",
         price: "4999",
         images: [
-          "https://images.unsplash.comgenerated_images/saree_category_product_photo.png",
+          "https://images.unsplash.com/photo-1598439210625-5067c578f3f6?w=800&h=1000&fit=crop",
         ],
         sizes: ["Free Size"],
         colors: ["Maroon", "Gold"],
@@ -370,7 +370,7 @@ export class MemStorage implements IStorage {
         price: "3999",
         originalPrice: "5999",
         images: [
-          "https://images.unsplash.comgenerated_images/salwar_suit_category_photo.png",
+          "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=800&h=1000&fit=crop",
         ],
         sizes: ["S", "M", "L", "XL"],
         colors: ["Mint Green", "White"],
@@ -386,7 +386,7 @@ export class MemStorage implements IStorage {
         category: "Salwar Suits",
         price: "8499",
         images: [
-          "https://images.unsplash.comgenerated_images/salwar_suit_category_photo.png",
+          "https://images.unsplash.com/photo-1595777216528-071e0127ccf4?w=800&h=1000&fit=crop",
         ],
         sizes: ["S", "M", "L", "XL", "XXL"],
         colors: ["Burgundy", "Gold"],
@@ -402,7 +402,7 @@ export class MemStorage implements IStorage {
         category: "Salwar Suits",
         price: "4499",
         images: [
-          "https://images.unsplash.comgenerated_images/salwar_suit_category_photo.png",
+          "https://images.unsplash.com/photo-1583846792524-97754d5537f2?w=800&h=1000&fit=crop",
         ],
         sizes: ["M", "L", "XL"],
         colors: ["Blue", "White"],
