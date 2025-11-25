@@ -22,8 +22,8 @@ interface ProductListingProps {
 }
 
 export default function ProductListing({ category }: ProductListingProps) {
-  const [, location] = useLocation();
-  const searchParams = new URLSearchParams(location.split("?")[1]);
+  const [location] = useLocation();
+  const searchParams = new URLSearchParams(location.split("?")[1] || "");
   const searchQuery = searchParams.get("q") || "";
 
   const [filters, setFilters] = useState({

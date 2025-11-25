@@ -137,7 +137,24 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Updates (Latest Session)
 
-### 1. CRITICAL FIX: Product Search and Category Pages Blank
+### 1. CRITICAL FIX: Product Listing Pages Completely Blank on Deployed Site
+**Problem**: Product category pages (/products/sarees, /products/kurtis, etc.) showed completely blank white screens on deployed site (vastravista.onrender.com), while homepage loaded fine.
+**Root Cause**: Line 26 in ProductListing.tsx had incorrect destructuring:
+```javascript
+const [, location] = useLocation();  // ❌ WRONG - Gets setLocation function (2nd element)
+```
+This was trying to call `.split()` on a function instead of a string, causing silent component crash.
+**Solution**: Fixed destructuring to correctly get the location string from wouter's useLocation hook:
+```javascript
+const [location] = useLocation();  // ✓ CORRECT - Gets location string (1st element)
+const searchParams = new URLSearchParams(location.split("?")[1] || "");
+```
+**Files Modified**: `client/src/pages/ProductListing.tsx`
+- Line 28: Fixed destructuring from `[, location]` to `[location]`
+- Line 29: Added fallback `|| ""` for safety in URL parsing
+**Result**: Product category pages now load and display products correctly on all environments
+
+### 2. Initial Category/Search Pages Fix (Earlier)
 **Problem**: Clicking on categories (Sarees, Kurtis, etc.) or using search showed blank pages with no products.
 **Root Cause**: React Query cache had `staleTime: Infinity`, preventing refetch when category/search parameters changed.
 **Solution**: Changed `staleTime: 0` in queryClient.ts to ensure queries always refetch when queryKey changes.
