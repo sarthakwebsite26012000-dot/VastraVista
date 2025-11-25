@@ -137,76 +137,62 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Updates (Latest Session)
 
-### 1. Mega Category Navigation System
+### 1. CRITICAL FIX: Product Search and Category Pages Blank
+**Problem**: Clicking on categories (Sarees, Kurtis, etc.) or using search showed blank pages with no products.
+**Root Cause**: React Query cache had `staleTime: Infinity`, preventing refetch when category/search parameters changed.
+**Solution**: Changed `staleTime: 0` in queryClient.ts to ensure queries always refetch when queryKey changes.
+**Files Modified**: `client/src/lib/queryClient.ts`
+- Changed staleTime from Infinity to 0
+- This enables proper data refetching when navigating between categories or performing searches
+**Result**: 
+- Category pages now display correct products (Sarees: 9 products, search works with 21+ results)
+- Category navigation fully functional for all 7 categories
+
+### 2. Homepage Image Management in Admin Panel
+**Implementation**: Added comprehensive image management interface in Admin dashboard
+- New "Homepage" tab with two main sections:
+  1. **Hero Carousel Slides**: Add/remove hero banner slides with image, title, subtitle, and CTA button
+  2. **Category Card Images**: Manage image URLs for all 7 product categories
+- Images stored in localStorage via storeSettings interface
+- Default Unsplash images provided for all sections
+- Admin can add/remove hero slides and update category images with instant preview
+
+**Files Modified**: 
+- `client/src/lib/storeSettings.ts` - Extended interface with heroSlides, categoryCardImages, promotionalBanners
+- `client/src/pages/Admin.tsx` - Added Homepage Settings tab with image management forms
+- `client/src/components/HeroCarousel.tsx` - Updated to load slides from storeSettings instead of hardcoded data
+
+**Storage Structure**:
+```typescript
+heroSlides?: Array<{
+  id: string;
+  image: string;
+  title: string;
+  subtitle: string;
+  cta: string;
+  link: string;
+}>;
+categoryCardImages?: Record<string, string>;
+promotionalBanners?: Array<{ id: string; image: string; title: string }>;
+```
+
+### 3. Mega Category Navigation System
 **Implementation**:
-- Added Men, Women, Kids main categories with dropdown menus in Header.tsx
-- Each category has dedicated subcategories with paths for routing
-- Creative Lucide React icons: Shirt for Men, Dress for Women, Baby for Kids
-- Subcategories use Zap icon for visual consistency
+- Men, Women, Kids main categories with dropdown menus in Header.tsx
+- Lucide React icons: Shirt for Men, Dress for Women, Baby for Kids
 - Hover effects on desktop with animated chevron icon
-- Mobile-friendly accordion navigation with collapsible category menus
+- Mobile-friendly accordion navigation
 
 **File Modified**: `client/src/components/Header.tsx`
-- Replaced simple category buttons with mega dropdown structure
-- Added MenuCategory interface for category/subcategory management
-- Desktop mega menus using CSS groups and hover states
-- Mobile navigation with nested button structure
 
-### 2. Admin Page - Multiple Image Upload
-**Implementation**:
-- Admin can upload up to 5 product images per product
-- Image URL input field with Add button for each image
-- Real-time image preview grid (3 columns)
-- Hover-to-remove X button for each image thumbnail
-- Image ordering with numbered badges
-- Validation: at least 1 image required for product creation
-- Toast notifications for validation feedback
-
-**File Modified**: `client/src/pages/Admin.tsx`
-- Added imageUrls state management for temporary image storage
-- Added handleAddImage and handleRemoveImage functions
-- Integrated Switch component for stock status toggle
-- Expanded dialog size for better image preview display
-- Updated form schema to include images array validation
-
-### 3. Admin Page - Stock Management
-**Implementation**:
-- Stock Status toggle using Radix UI Switch component
-- Visual switch labeled "In Stock" / "Out of Stock"
-- Styled as a card-like container with gray background
-- Integrated with form validation and state management
-- Stock status reflected in product table badges
-
-**File Modified**: `client/src/pages/Admin.tsx`
-- Added Switch import and Controller from react-hook-form
-- Stock toggle in dedicated panel for visibility
-- Product table shows "In Stock" or "Out" badges with appropriate colors
-
-### 4. Product Detail - Stock Status Badge
-**Implementation**:
-- Stock status badge displayed next to product name
-- Green badge for "In Stock", Red badge for "Out of Stock"
-- Positioned in top-right of product info section
-- Helps customers quickly identify product availability
-
-**File Modified**: `client/src/pages/ProductDetail.tsx`
-- Added stock status badge using Badge component
-- Dynamic badge variant based on inStock boolean
-- Proper alignment and spacing with product title
-
-### 5. Image Gallery Enhancements
-**Feature**: 
-- ProductDetail already has multi-image gallery with thumbnail selection
-- Supports all images from product.images array
-- Smooth image switching with border highlight on selected thumbnail
-- Responsive grid layout for thumbnails
-
-**Current Implementation**: `client/src/pages/ProductDetail.tsx`
-- Main image display (3:4 aspect ratio)
-- 4-column thumbnail grid that responds to selected image
-- Selected thumbnail shows primary color border
+### 4. Admin Features
+- Product management with multiple images (up to 5)
+- Stock status toggle
+- Order tracking and management
+- Homepage image management (new)
 
 ## Admin Access
 - URL: `/admin`
 - Default Password: `sarthak@26012000`
 - Customizable via `VITE_ADMIN_PASSWORD` environment variable
+- Three tabs: Products, Orders, Homepage
