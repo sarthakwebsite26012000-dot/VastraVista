@@ -18,6 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { getStoreSettings, saveStoreSettings, type StoreSettings } from "@/lib/storeSettings";
 
 const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD || "sarthak@26012000";
 
@@ -44,6 +45,14 @@ export default function AdminPage() {
   const [showProductDialog, setShowProductDialog] = useState(false);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [imageInput, setImageInput] = useState("");
+  const [storeSettings, setStoreSettings] = useState<StoreSettings>(getStoreSettings());
+  const [heroImageInput, setHeroImageInput] = useState("");
+  const [heroTitle, setHeroTitle] = useState("");
+  const [heroSubtitle, setHeroSubtitle] = useState("");
+  const [heroCta, setHeroCta] = useState("");
+  const [categoryImageInputs, setCategoryImageInputs] = useState<Record<string, string>>(
+    storeSettings.categoryCardImages || {}
+  );
   const { toast } = useToast();
 
   const mockOrders: Order[] = [
@@ -287,9 +296,10 @@ export default function AdminPage() {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-2" data-testid="tabs-admin">
+          <TabsList className="grid w-full grid-cols-3" data-testid="tabs-admin">
             <TabsTrigger value="products">Products</TabsTrigger>
             <TabsTrigger value="orders">Orders</TabsTrigger>
+            <TabsTrigger value="homepage">Homepage</TabsTrigger>
           </TabsList>
 
           {/* Products Tab */}
@@ -630,6 +640,165 @@ export default function AdminPage() {
                     ))}
                   </TableBody>
                 </Table>
+              </div>
+            </Card>
+          </TabsContent>
+
+          {/* Homepage Settings Tab */}
+          <TabsContent value="homepage" className="space-y-6">
+            <h2 className="text-2xl font-serif font-bold">Homepage Image Management</h2>
+            
+            {/* Hero Carousel Images */}
+            <Card className="p-6 space-y-4">
+              <h3 className="text-lg font-semibold">Hero Carousel Slides</h3>
+              <p className="text-sm text-muted-foreground">Add or edit images for the homepage hero carousel</p>
+              
+              <div className="space-y-3">
+                <div>
+                  <Label>Hero Image URL *</Label>
+                  <Input
+                    value={heroImageInput}
+                    onChange={(e) => setHeroImageInput(e.target.value)}
+                    placeholder="Paste image URL (e.g., https://images.unsplash.com/...)"
+                    data-testid="input-hero-image-url"
+                  />
+                </div>
+                <div>
+                  <Label>Title *</Label>
+                  <Input
+                    value={heroTitle}
+                    onChange={(e) => setHeroTitle(e.target.value)}
+                    placeholder="E.g., Elegant Sarees"
+                    data-testid="input-hero-title"
+                  />
+                </div>
+                <div>
+                  <Label>Subtitle *</Label>
+                  <Input
+                    value={heroSubtitle}
+                    onChange={(e) => setHeroSubtitle(e.target.value)}
+                    placeholder="E.g., Discover timeless beauty"
+                    data-testid="input-hero-subtitle"
+                  />
+                </div>
+                <div>
+                  <Label>CTA Text *</Label>
+                  <Input
+                    value={heroCta}
+                    onChange={(e) => setHeroCta(e.target.value)}
+                    placeholder="E.g., SHOP SAREES"
+                    data-testid="input-hero-cta"
+                  />
+                </div>
+                <Button
+                  onClick={() => {
+                    if (!heroImageInput.trim() || !heroTitle.trim() || !heroSubtitle.trim() || !heroCta.trim()) {
+                      toast({ title: "Please fill all fields", variant: "destructive" });
+                      return;
+                    }
+                    
+                    const newHeroSlide = {
+                      id: `hero-${Date.now()}`,
+                      image: heroImageInput,
+                      title: heroTitle,
+                      subtitle: heroSubtitle,
+                      cta: heroCta,
+                      link: "/products/sarees",
+                    };
+                    
+                    const updatedSettings = {
+                      ...storeSettings,
+                      heroSlides: [...(storeSettings.heroSlides || []), newHeroSlide],
+                    };
+                    
+                    saveStoreSettings(updatedSettings);
+                    setStoreSettings(updatedSettings);
+                    setHeroImageInput("");
+                    setHeroTitle("");
+                    setHeroSubtitle("");
+                    setHeroCta("");
+                    toast({ title: "Hero slide added successfully" });
+                  }}
+                  data-testid="button-add-hero-slide"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Hero Slide
+                </Button>
+              </div>
+
+              {/* Display Current Hero Slides */}
+              {storeSettings.heroSlides && storeSettings.heroSlides.length > 0 && (
+                <div className="mt-6 space-y-3">
+                  <p className="font-medium text-sm">Current Hero Slides:</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {storeSettings.heroSlides.map((slide) => (
+                      <Card key={slide.id} className="p-3 space-y-2">
+                        <img src={slide.image} alt={slide.title} className="w-full h-24 object-cover rounded" />
+                        <div className="text-sm">
+                          <p className="font-medium">{slide.title}</p>
+                          <p className="text-xs text-muted-foreground">{slide.subtitle}</p>
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            const updated = {
+                              ...storeSettings,
+                              heroSlides: storeSettings.heroSlides?.filter((s) => s.id !== slide.id) || [],
+                            };
+                            saveStoreSettings(updated);
+                            setStoreSettings(updated);
+                            toast({ title: "Hero slide removed" });
+                          }}
+                          data-testid={`button-remove-hero-${slide.id}`}
+                        >
+                          <Trash2 className="h-3 w-3 mr-1" />
+                          Remove
+                        </Button>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </Card>
+
+            {/* Category Card Images */}
+            <Card className="p-6 space-y-4">
+              <h3 className="text-lg font-semibold">Category Card Images</h3>
+              <p className="text-sm text-muted-foreground">Manage images for category cards displayed on homepage</p>
+              
+              <div className="space-y-3">
+                {["sarees", "salwar-suits", "kurtis", "lehengas", "mens-wear", "kids-wear", "bags"].map((category) => (
+                  <div key={category}>
+                    <Label className="capitalize">{category.replace("-", " ")} Image URL</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        value={categoryImageInputs[category] || ""}
+                        onChange={(e) =>
+                          setCategoryImageInputs({ ...categoryImageInputs, [category]: e.target.value })
+                        }
+                        placeholder="Paste image URL"
+                        data-testid={`input-category-image-${category}`}
+                      />
+                      <Button
+                        onClick={() => {
+                          const updated = {
+                            ...storeSettings,
+                            categoryCardImages: categoryImageInputs,
+                          };
+                          saveStoreSettings(updated);
+                          setStoreSettings(updated);
+                          toast({ title: "Category images updated" });
+                        }}
+                        variant="outline"
+                        size="sm"
+                        data-testid={`button-save-category-${category}`}
+                      >
+                        Save
+                      </Button>
+                    </div>
+                  </div>
+                ))}
               </div>
             </Card>
           </TabsContent>

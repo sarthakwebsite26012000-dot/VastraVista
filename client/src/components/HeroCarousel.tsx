@@ -1,44 +1,21 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import heroSaree from "@assets/generated_images/hero_banner_saree_model.png";
-import heroLehenga from "@assets/generated_images/hero_banner_lehenga_model.png";
-import heroSalwar from "@assets/generated_images/hero_banner_salwar_suit.png";
 import { Link } from "wouter";
-
-const slides = [
-  {
-    image: heroSaree,
-    title: "Exquisite Silk Sarees",
-    subtitle: "Timeless elegance for every occasion",
-    cta: "Shop Sarees",
-    link: "/products/sarees",
-  },
-  {
-    image: heroLehenga,
-    title: "Designer Lehengas",
-    subtitle: "Make every celebration unforgettable",
-    cta: "Explore Collection",
-    link: "/products/lehengas",
-  },
-  {
-    image: heroSalwar,
-    title: "Elegant Salwar Suits",
-    subtitle: "Contemporary style meets tradition",
-    cta: "Discover Now",
-    link: "/products/salwar-suits",
-  },
-];
+import { getStoreSettings } from "@/lib/storeSettings";
 
 export function HeroCarousel() {
+  const settings = getStoreSettings();
+  const slides = settings.heroSlides || [];
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
+    if (slides.length === 0) return;
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [slides.length]);
 
   const goToSlide = (index: number) => {
     setCurrentSlide(index);
@@ -51,6 +28,14 @@ export function HeroCarousel() {
   const prevSlide = () => {
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
   };
+
+  if (slides.length === 0) {
+    return (
+      <div className="relative h-[500px] md:h-[600px] overflow-hidden bg-muted flex items-center justify-center">
+        <p className="text-muted-foreground">Hero carousel not configured</p>
+      </div>
+    );
+  }
 
   return (
     <div className="relative h-[500px] md:h-[600px] overflow-hidden bg-muted">
