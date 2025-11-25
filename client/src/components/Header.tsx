@@ -75,12 +75,19 @@ export function Header({ onCartClick }: HeaderProps) {
   const [location] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const { data: cartItems = [] } = useQuery<CartItem[]>({
     queryKey: ["/api/cart"],
   });
 
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && searchQuery.trim()) {
+      window.location.href = `/products/search?q=${encodeURIComponent(searchQuery.trim())}`;
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-background border-b">
@@ -157,12 +164,9 @@ export function Header({ onCartClick }: HeaderProps) {
                 placeholder="Search for sarees, suits..."
                 className="w-64 pl-9"
                 data-testid="input-search"
-                onChange={(e) => {
-                  const query = e.target.value;
-                  if (query) {
-                    window.location.href = `/products/search?q=${encodeURIComponent(query)}`;
-                  }
-                }}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleSearchKeyDown}
               />
             </div>
 

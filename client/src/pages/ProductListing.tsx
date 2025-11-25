@@ -45,9 +45,18 @@ export default function ProductListing({ category }: ProductListingProps) {
     "salwar-suits": "Salwar Suits",
     kurtis: "Kurtis",
     lehengas: "Lehengas",
+    "mens-wear": "Men's Wear",
+    "kids-wear": "Kids Wear",
+    bags: "Bags",
   };
 
-  const title = category ? categoryTitles[category] : "All Products";
+  // Determine title based on search or category
+  let title = "All Products";
+  if (searchQuery) {
+    title = `Search Results for "${searchQuery}"`;
+  } else if (category) {
+    title = categoryTitles[category] || category;
+  }
 
   return (
     <div className="min-h-screen">
@@ -58,7 +67,7 @@ export default function ProductListing({ category }: ProductListingProps) {
             {title}
           </h1>
           <p className="text-muted-foreground font-decorative italic text-lg">
-            Discover our exquisite collection
+            {searchQuery ? "Browse search results" : "Discover our exquisite collection"}
           </p>
         </div>
       </div>
