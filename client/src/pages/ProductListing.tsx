@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import type { Product } from "@shared/schema";
 import { ProductCard } from "@/components/ProductCard";
@@ -35,6 +35,15 @@ export default function ProductListing({ category }: ProductListingProps) {
     search: searchQuery,
   });
   const [sortBy, setSortBy] = useState("featured");
+
+  // Update filters when search query or category changes
+  useEffect(() => {
+    setFilters((prev) => ({
+      ...prev,
+      search: searchQuery,
+      category: category || "",
+    }));
+  }, [searchQuery, category]);
 
   const { data: products = [], isLoading } = useQuery<Product[]>({
     queryKey: ["/api/products", { ...filters, sortBy }],
@@ -136,11 +145,12 @@ export default function ProductListing({ category }: ProductListingProps) {
                   No products found matching your criteria
                 </p>
                 <Button variant="outline" onClick={() => setFilters({
-                  category,
+                  category: category || "",
                   priceRange: [0, 50000],
                   sizes: [],
                   colors: [],
                   fabrics: [],
+                  search: searchQuery,
                 })} data-testid="button-clear-filters-empty">
                   Clear Filters
                 </Button>

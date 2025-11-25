@@ -18,6 +18,7 @@ interface FilterProps {
     sizes: string[];
     colors: string[];
     fabrics: string[];
+    search?: string;
   };
   onFilterChange: (filters: any) => void;
 }
@@ -68,7 +69,7 @@ export function ProductFilter({ filters, onFilterChange }: FilterProps) {
 
   const clearFilters = () => {
     onFilterChange({
-      category: filters.category,
+      ...filters,
       priceRange: [0, 50000],
       sizes: [],
       colors: [],
