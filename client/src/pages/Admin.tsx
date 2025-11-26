@@ -112,6 +112,7 @@ export default function AdminPage() {
     reset,
     control,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<ProductFormData>({
     resolver: zodResolver(productFormSchema),
@@ -145,12 +146,16 @@ export default function AdminPage() {
       });
       return;
     }
-    setImageUrls([...imageUrls, imageInput]);
+    const updatedImages = [...imageUrls, imageInput];
+    setImageUrls(updatedImages);
+    setValue("images", updatedImages);
     setImageInput("");
   };
 
   const handleRemoveImage = (index: number) => {
-    setImageUrls(imageUrls.filter((_, i) => i !== index));
+    const updatedImages = imageUrls.filter((_, i) => i !== index);
+    setImageUrls(updatedImages);
+    setValue("images", updatedImages);
   };
 
   const createProductMutation = useMutation({
