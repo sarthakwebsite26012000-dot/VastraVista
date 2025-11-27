@@ -7,18 +7,45 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LogOut, Plus, Edit, Trash2, Eye, Package, ShoppingCart, TrendingUp, X } from "lucide-react";
+import {
+  LogOut,
+  Plus,
+  Edit,
+  Trash2,
+  Eye,
+  Package,
+  ShoppingCart,
+  TrendingUp,
+  X,
+} from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { getStoreSettings, saveStoreSettings, type StoreSettings } from "@/lib/storeSettings";
+import {
+  getStoreSettings,
+  saveStoreSettings,
+  type StoreSettings,
+} from "@/lib/storeSettings";
 
 const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD || "sarthak@26012000";
 
@@ -45,14 +72,15 @@ export default function AdminPage() {
   const [showProductDialog, setShowProductDialog] = useState(false);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [imageInput, setImageInput] = useState("");
-  const [storeSettings, setStoreSettings] = useState<StoreSettings>(getStoreSettings());
+  const [storeSettings, setStoreSettings] =
+    useState<StoreSettings>(getStoreSettings());
   const [heroImageInput, setHeroImageInput] = useState("");
   const [heroTitle, setHeroTitle] = useState("");
   const [heroSubtitle, setHeroSubtitle] = useState("");
   const [heroCta, setHeroCta] = useState("");
-  const [categoryImageInputs, setCategoryImageInputs] = useState<Record<string, string>>(
-    storeSettings.categoryCardImages || {}
-  );
+  const [categoryImageInputs, setCategoryImageInputs] = useState<
+    Record<string, string>
+  >(storeSettings.categoryCardImages || {});
   const { toast } = useToast();
 
   const mockOrders: Order[] = [
@@ -102,7 +130,9 @@ export default function AdminPage() {
     }
   };
 
-  const { data: products = [], isLoading: productsLoading } = useQuery<Product[]>({
+  const { data: products = [], isLoading: productsLoading } = useQuery<
+    Product[]
+  >({
     queryKey: ["/api/products"],
   });
 
@@ -211,7 +241,12 @@ export default function AdminPage() {
               />
             </div>
 
-            <Button type="submit" className="w-full" size="lg" data-testid="button-admin-login">
+            <Button
+              type="submit"
+              className="w-full"
+              size="lg"
+              data-testid="button-admin-login"
+            >
               Login
             </Button>
           </form>
@@ -219,7 +254,8 @@ export default function AdminPage() {
           <Separator className="my-6" />
 
           <p className="text-xs text-center text-muted-foreground">
-            This is a secure admin panel. Only authorized personnel should access this area.
+            This is a secure admin panel. Only authorized personnel should
+            access this area.
           </p>
         </Card>
       </div>
@@ -230,7 +266,7 @@ export default function AdminPage() {
   const totalOrders = mockOrders.length;
   const totalRevenue = mockOrders.reduce(
     (sum, order) => sum + parseFloat(order.totalAmount),
-    0
+    0,
   );
 
   return (
@@ -240,12 +276,14 @@ export default function AdminPage() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-serif font-bold">Admin Dashboard</h1>
-            <p className="text-sm text-muted-foreground">Elegant Ethnic Management</p>
+            <p className="text-sm text-muted-foreground">
+              Elegant Ethnic Management
+            </p>
           </div>
           <div className="flex gap-2">
             <Button
               variant="outline"
-              onClick={() => window.location.href = "/admin/settings"}
+              onClick={() => (window.location.href = "/admin/settings")}
               data-testid="button-admin-settings"
             >
               Settings
@@ -301,7 +339,10 @@ export default function AdminPage() {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-3" data-testid="tabs-admin">
+          <TabsList
+            className="grid w-full grid-cols-3"
+            data-testid="tabs-admin"
+          >
             <TabsTrigger value="products">Products</TabsTrigger>
             <TabsTrigger value="orders">Orders</TabsTrigger>
             <TabsTrigger value="homepage">Homepage</TabsTrigger>
@@ -310,8 +351,13 @@ export default function AdminPage() {
           {/* Products Tab */}
           <TabsContent value="products" className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-serif font-bold">Product Management</h2>
-              <Dialog open={showProductDialog} onOpenChange={setShowProductDialog}>
+              <h2 className="text-2xl font-serif font-bold">
+                Product Management
+              </h2>
+              <Dialog
+                open={showProductDialog}
+                onOpenChange={setShowProductDialog}
+              >
                 <DialogTrigger asChild>
                   <Button
                     onClick={() => {
@@ -418,7 +464,9 @@ export default function AdminPage() {
 
                     {/* Stock Management */}
                     <div className="flex items-center justify-between p-3 bg-card border rounded-md">
-                      <Label className="text-sm font-medium">Stock Status</Label>
+                      <Label className="text-sm font-medium">
+                        Stock Status
+                      </Label>
                       <Controller
                         name="inStock"
                         control={control}
@@ -522,10 +570,7 @@ export default function AdminPage() {
                       >
                         Cancel
                       </Button>
-                      <Button
-                        type="submit"
-                        data-testid="button-save-product"
-                      >
+                      <Button type="submit" data-testid="button-save-product">
                         {editingProduct ? "Update Product" : "Add Product"}
                       </Button>
                     </div>
@@ -550,14 +595,23 @@ export default function AdminPage() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {products.slice(0, 10).map((product) => (
-                        <TableRow key={product.id} data-testid={`product-row-${product.id}`}>
-                          <TableCell className="font-medium">{product.name}</TableCell>
+                      {products.map((product) => (
+                        <TableRow
+                          key={product.id}
+                          data-testid={`product-row-${product.id}`}
+                        >
+                          <TableCell className="font-medium">
+                            {product.name}
+                          </TableCell>
                           <TableCell>{product.category}</TableCell>
-                          <TableCell>₹{parseFloat(product.price).toLocaleString("en-IN")}</TableCell>
+                          <TableCell>
+                            ₹{parseFloat(product.price).toLocaleString("en-IN")}
+                          </TableCell>
                           <TableCell>
                             <Badge
-                              variant={product.inStock ? "default" : "secondary"}
+                              variant={
+                                product.inStock ? "default" : "secondary"
+                              }
                             >
                               {product.inStock ? "In Stock" : "Out"}
                             </Badge>
@@ -614,18 +668,28 @@ export default function AdminPage() {
                   </TableHeader>
                   <TableBody>
                     {mockOrders.map((order) => (
-                      <TableRow key={order.id} data-testid={`order-row-${order.id}`}>
-                        <TableCell className="font-mono text-sm">{order.id}</TableCell>
+                      <TableRow
+                        key={order.id}
+                        data-testid={`order-row-${order.id}`}
+                      >
+                        <TableCell className="font-mono text-sm">
+                          {order.id}
+                        </TableCell>
                         <TableCell>{order.customerName}</TableCell>
-                        <TableCell>₹{parseFloat(order.totalAmount).toLocaleString("en-IN")}</TableCell>
+                        <TableCell>
+                          ₹
+                          {parseFloat(order.totalAmount).toLocaleString(
+                            "en-IN",
+                          )}
+                        </TableCell>
                         <TableCell>
                           <Badge
                             variant={
                               order.status === "delivered"
                                 ? "default"
                                 : order.status === "shipped"
-                                ? "secondary"
-                                : "outline"
+                                  ? "secondary"
+                                  : "outline"
                             }
                           >
                             {order.status.charAt(0).toUpperCase() +
@@ -651,13 +715,17 @@ export default function AdminPage() {
 
           {/* Homepage Settings Tab */}
           <TabsContent value="homepage" className="space-y-6">
-            <h2 className="text-2xl font-serif font-bold">Homepage Image Management</h2>
-            
+            <h2 className="text-2xl font-serif font-bold">
+              Homepage Image Management
+            </h2>
+
             {/* Hero Carousel Images */}
             <Card className="p-6 space-y-4">
               <h3 className="text-lg font-semibold">Hero Carousel Slides</h3>
-              <p className="text-sm text-muted-foreground">Add or edit images for the homepage hero carousel</p>
-              
+              <p className="text-sm text-muted-foreground">
+                Add or edit images for the homepage hero carousel
+              </p>
+
               <div className="space-y-3">
                 <div>
                   <Label>Hero Image URL *</Label>
@@ -697,11 +765,19 @@ export default function AdminPage() {
                 </div>
                 <Button
                   onClick={() => {
-                    if (!heroImageInput.trim() || !heroTitle.trim() || !heroSubtitle.trim() || !heroCta.trim()) {
-                      toast({ title: "Please fill all fields", variant: "destructive" });
+                    if (
+                      !heroImageInput.trim() ||
+                      !heroTitle.trim() ||
+                      !heroSubtitle.trim() ||
+                      !heroCta.trim()
+                    ) {
+                      toast({
+                        title: "Please fill all fields",
+                        variant: "destructive",
+                      });
                       return;
                     }
-                    
+
                     const newHeroSlide = {
                       id: `hero-${Date.now()}`,
                       image: heroImageInput,
@@ -710,12 +786,15 @@ export default function AdminPage() {
                       cta: heroCta,
                       link: "/products/sarees",
                     };
-                    
+
                     const updatedSettings = {
                       ...storeSettings,
-                      heroSlides: [...(storeSettings.heroSlides || []), newHeroSlide],
+                      heroSlides: [
+                        ...(storeSettings.heroSlides || []),
+                        newHeroSlide,
+                      ],
                     };
-                    
+
                     saveStoreSettings(updatedSettings);
                     setStoreSettings(updatedSettings);
                     setHeroImageInput("");
@@ -732,55 +811,80 @@ export default function AdminPage() {
               </div>
 
               {/* Display Current Hero Slides */}
-              {storeSettings.heroSlides && storeSettings.heroSlides.length > 0 && (
-                <div className="mt-6 space-y-3">
-                  <p className="font-medium text-sm">Current Hero Slides:</p>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {storeSettings.heroSlides.map((slide) => (
-                      <Card key={slide.id} className="p-3 space-y-2">
-                        <img src={slide.image} alt={slide.title} className="w-full h-24 object-cover rounded" />
-                        <div className="text-sm">
-                          <p className="font-medium">{slide.title}</p>
-                          <p className="text-xs text-muted-foreground">{slide.subtitle}</p>
-                        </div>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => {
-                            const updated = {
-                              ...storeSettings,
-                              heroSlides: storeSettings.heroSlides?.filter((s) => s.id !== slide.id) || [],
-                            };
-                            saveStoreSettings(updated);
-                            setStoreSettings(updated);
-                            toast({ title: "Hero slide removed" });
-                          }}
-                          data-testid={`button-remove-hero-${slide.id}`}
-                        >
-                          <Trash2 className="h-3 w-3 mr-1" />
-                          Remove
-                        </Button>
-                      </Card>
-                    ))}
+              {storeSettings.heroSlides &&
+                storeSettings.heroSlides.length > 0 && (
+                  <div className="mt-6 space-y-3">
+                    <p className="font-medium text-sm">Current Hero Slides:</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {storeSettings.heroSlides.map((slide) => (
+                        <Card key={slide.id} className="p-3 space-y-2">
+                          <img
+                            src={slide.image}
+                            alt={slide.title}
+                            className="w-full h-24 object-cover rounded"
+                          />
+                          <div className="text-sm">
+                            <p className="font-medium">{slide.title}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {slide.subtitle}
+                            </p>
+                          </div>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              const updated = {
+                                ...storeSettings,
+                                heroSlides:
+                                  storeSettings.heroSlides?.filter(
+                                    (s) => s.id !== slide.id,
+                                  ) || [],
+                              };
+                              saveStoreSettings(updated);
+                              setStoreSettings(updated);
+                              toast({ title: "Hero slide removed" });
+                            }}
+                            data-testid={`button-remove-hero-${slide.id}`}
+                          >
+                            <Trash2 className="h-3 w-3 mr-1" />
+                            Remove
+                          </Button>
+                        </Card>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
             </Card>
 
             {/* Category Card Images */}
             <Card className="p-6 space-y-4">
               <h3 className="text-lg font-semibold">Category Card Images</h3>
-              <p className="text-sm text-muted-foreground">Manage images for category cards displayed on homepage</p>
-              
+              <p className="text-sm text-muted-foreground">
+                Manage images for category cards displayed on homepage
+              </p>
+
               <div className="space-y-3">
-                {["sarees", "salwar-suits", "kurtis", "lehengas", "mens-wear", "kids-wear", "bags"].map((category) => (
+                {[
+                  "sarees",
+                  "salwar-suits",
+                  "kurtis",
+                  "lehengas",
+                  "mens-wear",
+                  "kids-wear",
+                  "bags",
+                ].map((category) => (
                   <div key={category}>
-                    <Label className="capitalize">{category.replace("-", " ")} Image URL</Label>
+                    <Label className="capitalize">
+                      {category.replace("-", " ")} Image URL
+                    </Label>
                     <div className="flex gap-2">
                       <Input
                         value={categoryImageInputs[category] || ""}
                         onChange={(e) =>
-                          setCategoryImageInputs({ ...categoryImageInputs, [category]: e.target.value })
+                          setCategoryImageInputs({
+                            ...categoryImageInputs,
+                            [category]: e.target.value,
+                          })
                         }
                         placeholder="Paste image URL"
                         data-testid={`input-category-image-${category}`}
