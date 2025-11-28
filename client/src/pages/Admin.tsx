@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import type { Product, Order } from "@shared/schema";
 import { Button } from "@/components/ui/button";
@@ -148,6 +148,27 @@ export default function AdminPage() {
     resolver: zodResolver(productFormSchema),
     defaultValues: editingProduct || { inStock: true, images: [] },
   });
+
+  useEffect(() => {
+    if (editingProduct) {
+      reset({
+        name: editingProduct.name,
+        description: editingProduct.description,
+        category: editingProduct.category,
+        price: editingProduct.price,
+        originalPrice: editingProduct.originalPrice,
+        fabric: editingProduct.fabric,
+        featured: editingProduct.featured,
+        newArrival: editingProduct.newArrival,
+        inStock: editingProduct.inStock,
+        images: editingProduct.images,
+      });
+      setImageUrls(editingProduct.images);
+    } else {
+      reset({ inStock: true, images: [] });
+      setImageUrls([]);
+    }
+  }, [editingProduct, reset]);
 
   const inStockValue = watch("inStock");
 
