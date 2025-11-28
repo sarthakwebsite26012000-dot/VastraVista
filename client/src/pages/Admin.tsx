@@ -229,12 +229,16 @@ export default function AdminPage() {
   const onSubmit = (data: ProductFormData) => {
     if (imageUrls.length === 0) {
       toast({
-        title: "At least one image is required",
-        variant: "destructive",
+        title: 'At least one image is required',
+        variant: 'destructive',
       });
       return;
     }
-    createProductMutation.mutate({ ...data, images: imageUrls });
+    if (editingProduct) {
+      updateProductMutation.mutate({ ...data, images: imageUrls, id: editingProduct.id });
+    } else {
+      createProductMutation.mutate({ ...data, images: imageUrls });
+    }
   };
 
   if (!isLoggedIn) {
