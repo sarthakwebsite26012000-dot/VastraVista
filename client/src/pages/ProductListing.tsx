@@ -37,13 +37,12 @@ export default function ProductListing({ category }: ProductListingProps) {
 
   // Update filters when search query or category changes
   useEffect(() => {
-    const currentSearchQuery = new URLSearchParams(window.location.search).get("q") || "";
     setFilters((prev) => ({
       ...prev,
-      search: currentSearchQuery,
+      search: searchQuery,
       category: category || "",
     }));
-  }, [category, location]);
+  }, [searchQuery, category, location]);
 
   const { data: products = [], isLoading } = useQuery<Product[]>({
     queryKey: ["/api/products", { ...filters, sortBy }],
