@@ -23,8 +23,8 @@ interface ProductListingProps {
 
 export default function ProductListing({ category }: ProductListingProps) {
   const [location] = useLocation();
-  const searchParams = new URLSearchParams(window.location.search);
-  const searchQuery = searchParams.get("q") || "";
+  // Extract query string from current URL for reactivity
+  const searchQuery = new URLSearchParams(window.location.search).get("q") || "";
 
   const [filters, setFilters] = useState({
     category: category || "",
@@ -43,7 +43,7 @@ export default function ProductListing({ category }: ProductListingProps) {
       search: searchQuery,
       category: category || "",
     }));
-  }, [searchQuery, category]);
+  }, [searchQuery, category, location]);
 
   const { data: products = [], isLoading } = useQuery<Product[]>({
     queryKey: ["/api/products", { ...filters, sortBy }],
