@@ -382,16 +382,6 @@ export default function AdminPage() {
                 Product Management
               </h2>
               <Dialog
-              <div className="flex items-center gap-2">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                  <Input
-                    placeholder="Search products..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 w-64"
-                  />
-                </div>
                 open={showProductDialog}
                 onOpenChange={setShowProductDialog}
               >
@@ -407,7 +397,6 @@ export default function AdminPage() {
                     <Plus className="h-4 w-4 mr-2" />
                     Add Product
                   </Button>
-              </div>
                 </DialogTrigger>
                 <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
                   <DialogHeader>
