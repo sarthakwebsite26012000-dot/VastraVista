@@ -16,7 +16,6 @@ import { Check, Smartphone, CreditCard, Building2, Truck } from "lucide-react";
 import { getStoreSettings } from "@/lib/storeSettings";
 
 const checkoutSchema = z.object({
-  paymentMethod: z.enum(["upi", "card", "netbanking", "cod"]),
   customerName: z.string().min(1, "Name is required"),
   customerEmail: z.string().email("Invalid email address"),
   customerPhone: z.string().min(10, "Phone number must be at least 10 digits"),
@@ -97,7 +96,7 @@ export default function Checkout() {
     } else if (currentStep === 1) {
       setCurrentStep(2);
     } else if (currentStep === 2) {
-      createOrderMutation.mutate(data);
+      createOrderMutation.mutate({ ...data, paymentMethod });
     }
   };
 
