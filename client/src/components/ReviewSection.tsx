@@ -34,6 +34,7 @@ export function ReviewSection({ productId }: ReviewSectionProps) {
 
   const { data: reviews = [], isLoading } = useQuery<Review[]>({
     queryKey: ["/api/reviews", productId],
+        queryFn: () => apiRequest("GET", `/api/reviews?productId=${productId}`),
   });
 
   const {
