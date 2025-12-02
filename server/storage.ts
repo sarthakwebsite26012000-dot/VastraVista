@@ -94,7 +94,8 @@ export class MemStorage implements IStorage {
       products = products.filter((p) =>
         p.name.toLowerCase().includes(searchLower) ||
         p.category.toLowerCase().includes(searchLower) ||
-        p.fabric.toLowerCase().includes(searchLower)
+        p.fabric.toLowerCase().includes(searchLower) ||
+        p.description.toLowerCase().includes(searchLower)
       );
     }
 
